@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Code listing settings
+\lstset{
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    backgroundcolor=\color{gray!10},
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=2
+}
+
+% Page setup
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{LeetCode Notes}
+\lhead{Difficult Problems}
+\rfoot{\thepage}
+
+% Section formatting
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\begin{document}
+
+\title{\textbf{LeetCode Difficult Problems Notes}}
+\author{}
+\date{}
+\maketitle
+
+\tableofcontents
+\newpage
+
+% Section for difficult LeetCode problems
+
+\section{Tree Problems}
+
+\subsection{110. Balanced Binary Tree}
+
+\textbf{Problem:} Given a binary tree, determine if it is height-balanced. A height-balanced binary tree is defined as a binary tree in which the height of the left and right subtree of every node differs in height by no more than 1.
+
+\textbf{Approach:} Use a bottom-up approach with a helper function that returns the height of the subtree. If any subtree is unbalanced, propagate -1 upwards.
+
+{\small
+\begin{lstlisting}[language=C++]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+// This class checks if a given binary tree is height-balanced.
+class Solution {
+public:
+    /**
+     * The main function to check if a tree is balanced.
+     * A balanced tree is defined as one where the heights
+     * of the two child subtrees of any node never differ by more than one.
+     */
+    bool isBalanced(TreeNode* root) {
+        // If checkHeight returns -1, the tree is not balanced.
+        return checkHeight(root) != -1;
+    }
+
+    /**
+     * Helper function to compute the height of the tree.
+     * Returns -1 immediately if an unbalanced subtree is found.
+     */
+    int checkHeight(TreeNode* root) {
+        // An empty subtree is balanced, and its height is 0.
+        if (root == nullptr) {
+            return 0;
+        }
+        
+        // Recursively check the height of the left subtree.
+        int leftHeight = checkHeight(root->left);
+        // If left subtree is unbalanced, propagate failure upwards (-1).
+        if (leftHeight == -1) {
+            return -1;      
+        }
+
+        // Recursively check the height of the right subtree.
+        int rightHeight = checkHeight(root->right);
+        // If right subtree is unbalanced, propagate failure upwards (-1).
+        if (rightHeight == -1) {
+            return -1;
+        }
+
+        // If the current node is unbalanced (heights differ by more than 1), report unbalanced.
+        if (abs(leftHeight - rightHeight) > 1) {
+            return -1;
+        }
+
+        // If balanced, return height of current subtree.
+        // Height is 1 + maximum height of the two subtrees.
+        return 1 + max(leftHeight, rightHeight);
+    }
+};
+
+/*
+  Explanation of the -1 "signal":
+  --------------------------------
+  The function uses -1 as a special value to indicate that 
+  an unbalanced subtree has been found. Once -1 is returned 
+  by any recursion, all further ancestors also return -1,
+  which efficiently stops further unnecessary checks.
+*/
+\end{lstlisting}
+}
+
+\textbf{Time Complexity:} O(n) - we visit each node once\\
+\textbf{Space Complexity:} O(h) - where h is the height of the tree (worst case O(n) for skewed trees)
+
+\newpage
+
+
+\end{document}
